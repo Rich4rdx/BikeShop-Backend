@@ -6,7 +6,7 @@ services:
     container_name: mysql-tienda
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: richard
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: tienda_bicicletas
     ports:
       - "3307:3306"
@@ -15,7 +15,7 @@ services:
     networks:
       - red-tienda
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prichard"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -34,7 +34,10 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db-bicicletas:3306/tienda_bicicletas?createDatabaseIfNotExist=true&serverTimezone=America/Bogota
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: richard
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TRABAJADOR_PASSWORD: ${TRABAJADOR_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JACKSON_SERIALIZATION_WRITE-DATES-AS-TIMESTAMPS: "false"
     networks:
